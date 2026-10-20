@@ -18,19 +18,19 @@ public class RoomController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RoomEntity> getRoomById(@PathVariable String id) {
+    public ResponseEntity<RoomDto> getRoomById(@PathVariable String id) {
         log.info("Requested room with id {}", id);
 
         return service.getRoomById(id)
-                .map(r -> ResponseEntity.status(HttpStatus.FOUND).body(r))
+                .map(r -> ResponseEntity.status(HttpStatus.FOUND).body(RoomDto.from(r)))
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @PostMapping
-    public ResponseEntity<RoomEntity> createRoom() {
+    public ResponseEntity<RoomDto> createRoom() {
         RoomEntity room = service.createRoom();
 
         log.info("Called createRoom for room {}", room);
-        return ResponseEntity.status(HttpStatus.CREATED).body(room);
+        return ResponseEntity.status(HttpStatus.CREATED).body(RoomDto.from(room));
     }
 }
