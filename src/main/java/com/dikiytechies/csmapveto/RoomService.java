@@ -31,4 +31,15 @@ public class RoomService {
                 return roomEntity;
         }
     }
+
+//    public Optional<RoomDto> joinRoom(String id) {
+//        Optional<RoomEntity> roomEntity = repository.findById(id);
+//
+//        if (roomEntity.isEmpty())
+//            return Optional.empty();
+//
+//        String token = roomEntity.get().addPlayer();
+//
+//        return Optional.of(new JoinRoomResponse(RoomDto.from(roomEntity.get()), token));
+//    }
 }

@@ -33,4 +33,9 @@ public class RoomController {
         log.info("Called createRoom for room {}", room);
         return ResponseEntity.status(HttpStatus.CREATED).body(RoomDto.from(room));
     }
+//
+//    @PostMapping("/{id}")
+//    public ResponseEntity<Void> joinRoom(@PathVariable String id) {
+//        return service.joinRoom(id).map(ResponseEntity::ok).orElse();
+//    }
 }

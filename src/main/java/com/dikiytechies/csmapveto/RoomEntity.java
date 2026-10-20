@@ -2,21 +2,29 @@ package com.dikiytechies.csmapveto;
 
 import org.springframework.web.socket.WebSocketSession;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class RoomEntity {
     private final String id;
-    private final List<WebSocketSession> players = new ArrayList<>();
+    private final Map<String, WebSocketSession> players = new ConcurrentHashMap<>();
 
-    public boolean join(WebSocketSession session) {
-        if (players.size() >= 2 || players.contains(session))
-            return false;
+    public synchronized Optional<String> addPlayer(WebSocketSession session) {
+        if (players.size() >= 2)
+            return Optional.empty();
 
-        return players.add(session);
+        String token = UUID.randomUUID().toString();
+
+        if (players.putIfAbsent(token, session) == null)
+            return Optional.of(token);
+
+        return Optional.empty();
+    }
+
+    public synchronized void removePlayer(WebSocketSession session) {
+        players.entrySet().removeIf(e -> e.getValue().equals(session));
     }
 
     public RoomEntity(String id) {
@@ -27,7 +35,7 @@ public class RoomEntity {
         return id;
     }
 
-    public List<WebSocketSession> getPlayers() {
-        return players;
+    public synchronized Map<String, WebSocketSession> getPlayers() {
+        return Map.copyOf(players);
     }
 }
